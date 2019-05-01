@@ -15,7 +15,6 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Test;
 import org.zowe.api.common.utils.ResponseCache;
 import org.zowe.data.sets.services.zosmf.AbstractZosmfRequestRunnerTest;
-import org.zowe.unix.files.exceptions.PathNameNotValidException;
 import org.zowe.unix.files.exceptions.UnauthorisedFileException;
 import org.zowe.unix.files.model.UnixFileContent;
 import org.zowe.unix.files.model.UnixFileContentWithETag;
@@ -24,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class GetUnixFileContentRunnerTest extends AbstractZosmfRequestRunnerTest {
+public class GetUnixFileContentZosmfRunnerTest extends AbstractZosmfRequestRunnerTest {
     
     @Test
     public void get_unix_file_content_should_call_zosmf_and_parse_response_correctly() throws Exception {
@@ -43,7 +42,7 @@ public class GetUnixFileContentRunnerTest extends AbstractZosmfRequestRunnerTest
         RequestBuilder requestBuilder = mockGetBuilder(String.format("restfiles/fs%s", path));
         when(zosmfConnector.request(requestBuilder)).thenReturn(response);
         
-        assertEquals(expected, new GetUnixFileContentRunner(path).run(zosmfConnector));
+        assertEquals(expected, new GetUnixFileContentZosmfRunner(path, false).run(zosmfConnector));
         
         verifyInteractions(requestBuilder, false);
     }
@@ -58,21 +57,7 @@ public class GetUnixFileContentRunnerTest extends AbstractZosmfRequestRunnerTest
         RequestBuilder requestBuilder = mockGetBuilder(String.format("restfiles/fs%s", path));
         when(zosmfConnector.request(requestBuilder)).thenReturn(response);
         
-        shouldThrow(expectedException, () -> new GetUnixFileContentRunner(path).run(zosmfConnector));
-        verifyInteractions(requestBuilder, false);
-    }
-    
-    @Test
-    public void get_unix_file_content_throws_not_valid_path_error_message() throws Exception {
-        String path = "/not/validPath//";
-        
-        Exception expectedException = new PathNameNotValidException(path);
-        
-        mockJsonResponse(HttpStatus.SC_INTERNAL_SERVER_ERROR, loadTestFile("getUnixFileInvalidPath.json"));
-        RequestBuilder requestBuilder = mockGetBuilder(String.format("restfiles/fs%s", path));
-        when(zosmfConnector.request(requestBuilder)).thenReturn(response);
-        
-        shouldThrow(expectedException, () -> new GetUnixFileContentRunner(path).run(zosmfConnector));
+        shouldThrow(expectedException, () -> new GetUnixFileContentZosmfRunner(path, false).run(zosmfConnector));
         verifyInteractions(requestBuilder, false);
     }
 }

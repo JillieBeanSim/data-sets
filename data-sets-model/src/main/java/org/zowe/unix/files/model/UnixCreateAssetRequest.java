@@ -13,16 +13,20 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
+@Builder(toBuilder = true)
 @AllArgsConstructor
+@NoArgsConstructor
 
-@ApiModel(value = "UnixFileContent", description = "Unix file content")
-public class UnixFileContent {
+@ApiModel(value = "UnixCreateAssetRequest", description = "Unix File or Directory attributes for creation")
+public class UnixCreateAssetRequest {
 
-    @ApiModelProperty(value = "The content of the unix file", dataType = "string", required = true, example = "Hello World")
-    private String content;
+    @ApiModelProperty(value = "Unix Entity type, File or Directory", required = true, example = "FILE")
+    private UnixEntityType type;
+    @ApiModelProperty(value = "Access Mode for new asset", required = false, example = "rwxrw-r--")
+    private String permissions;
 }

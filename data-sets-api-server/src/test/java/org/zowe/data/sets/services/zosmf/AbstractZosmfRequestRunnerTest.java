@@ -75,7 +75,7 @@ public abstract class AbstractZosmfRequestRunnerTest extends ZoweApiTest {
         });
     }
 
-    void verifyInteractions(RequestBuilder requestBuilder) throws IOException, URISyntaxException {
+    protected void verifyInteractions(RequestBuilder requestBuilder) throws IOException, URISyntaxException {
         verifyInteractions(requestBuilder, false);
     }
 
@@ -99,7 +99,7 @@ public abstract class AbstractZosmfRequestRunnerTest extends ZoweApiTest {
         return builder;
     }
 
-    RequestBuilder mockDeleteBuilder(String relativeUri) throws URISyntaxException {
+    protected RequestBuilder mockDeleteBuilder(String relativeUri) throws URISyntaxException {
         RequestBuilder builder = mock(RequestBuilder.class);
         mockStatic(RequestBuilder.class);
         URI uri = new URI(BASE_URL + relativeUri);
@@ -108,7 +108,7 @@ public abstract class AbstractZosmfRequestRunnerTest extends ZoweApiTest {
         return builder;
     }
 
-    RequestBuilder mockPutBuilder(String relativeUri, String string) throws Exception {
+    protected RequestBuilder mockPutBuilder(String relativeUri, String string) throws Exception {
         StringEntity stringEntity = mock(StringEntity.class);
         PowerMockito.whenNew(StringEntity.class).withArguments(string).thenReturn(stringEntity);
         return mockPutBuilder(relativeUri, stringEntity);
@@ -138,7 +138,7 @@ public abstract class AbstractZosmfRequestRunnerTest extends ZoweApiTest {
         return mockPostBuilder(relativeUri, stringEntity);
     }
 
-    RequestBuilder mockPostBuilder(String relativeUri, JsonObject json) throws Exception {
+    protected RequestBuilder mockPostBuilder(String relativeUri, JsonObject json) throws Exception {
         StringEntity stringEntity = mock(StringEntity.class);
         PowerMockito.whenNew(StringEntity.class).withArguments(json.toString(), ContentType.APPLICATION_JSON)
             .thenReturn(stringEntity);
@@ -191,7 +191,7 @@ public abstract class AbstractZosmfRequestRunnerTest extends ZoweApiTest {
         return responseCache;
     }
 
-    ResponseCache mockResponseCache(int statusCode) throws Exception {
+    protected ResponseCache mockResponseCache(int statusCode) throws Exception {
         ResponseCache responseCache = mock(ResponseCache.class);
         PowerMockito.whenNew(ResponseCache.class).withArguments(response).thenReturn(responseCache);
         when(responseCache.getStatus()).thenReturn(statusCode);
